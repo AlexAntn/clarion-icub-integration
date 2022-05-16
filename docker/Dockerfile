@@ -22,6 +22,13 @@ ENV CMAKE_PREFIX_PATH=${INSTALL_DIR}
 #        git \
 #        wget
 
+
+RUN cd ${PROJECTS_DIR} &&\
+    git clone https://github.com/robotology/segmentation &&\
+    cd segmentation && mkdir build && cd build &&\
+    cmake .. &&\
+    make install
+
 RUN cd ${PROJECTS_DIR} &&\
     git clone https://github.com/AlexAntn/clarion-icub-integration.git 
 

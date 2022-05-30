@@ -19,6 +19,7 @@
 #define __CLARION_INTERFACE_MODULE_H__
 
 #include <yarp/os/Vocab.h>
+#include <yarp/os/Bottle.h>
 #include <yarp/os/BufferedPort.h>
 #include <yarp/os/ResourceFinder.h>
 #include <yarp/os/RFModule.h>
@@ -26,6 +27,8 @@
 #include <yarp/os/Log.h>
 #include <yarp/os/RpcClient.h>
 #include <yarp/os/LogStream.h>
+
+#include <yarp/sig/Image.h>
 
 #include <vector>
 #include <mutex>
@@ -39,7 +42,6 @@
 
 /* potentially useful libraries:
 
-#include <yarp/sig/Image.h>
 #include <yarp/cv/Cv.h>
 #include <yarp/os/Stamp.h>
 
@@ -55,7 +57,11 @@ class clarionInterface : public yarp::os::RFModule, public clarionInterface_IDLs
     std::string                 handlerPortName;
     
     // ports
+    yarp::os::BufferedPort<yarp::os::Bottle>                            blobPort;
+    yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> >    segmentedPort;
 
+    yarp::os::Bottle                                *blobBottle;
+    yarp::sig::ImageOf<yarp::sig::PixelRgb>         *segmentedImg; // segmented image from lbpExtract
 
     // other variables
     bool                        closing;
@@ -70,6 +76,7 @@ public:
 
     bool            attach(yarp::os::RpcServer &source) override;
     bool            configure(yarp::os::ResourceFinder &rf) override;
+    bool            openPorts();
 
     bool            interruptModule() override;
     bool            close() override;

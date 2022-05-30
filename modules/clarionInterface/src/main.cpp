@@ -15,6 +15,20 @@
  * Public License for more details
  */
 
+
+/* The plan for this module is to act as an interface between the world and clarion.
+ * As such, it will have to communicate with 4 main modules:
+ * - Clarion
+ * - ActionsRenderingEngine
+ * - lbpExtract (for the vision stuff)
+ * - motors (for the current)
+ * 
+ * Communication with ARE will be done on the clarionInterfaceThread. We can also use this
+ * thread to obtain the currents from the motors, this way we only interface with motors there.
+ * The vision stuff we can do in the clarionInterface module, in the updateModule function.
+ */
+
+
 #include <clarionInterface.h>
 
 /********************************************************/

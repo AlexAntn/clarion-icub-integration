@@ -66,6 +66,6 @@ bool clarionIntThread::threadInit()
 
 void clarionIntThread::run()
 {
-    yInfo() << "Hello! I'm running!";
+    //yInfo() << "Hello! I'm running!";
     return;
 }

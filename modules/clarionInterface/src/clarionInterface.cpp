@@ -131,3 +131,11 @@ bool clarionInterface::updateModule()
 
     return !closing;
 }
+
+bool clarionInterface::point(double x_pos, double y_pos, double z_pos)
+{
+    // should interact with ARE to point at something
+    yInfo() << "asking to go to coordinates: " << x_pos << y_pos << z_pos;
+    thread->point(x_pos, y_pos, z_pos);
+    return true;
+}

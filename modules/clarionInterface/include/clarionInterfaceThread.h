@@ -52,8 +52,19 @@ class clarionIntThread: public yarp::os::RateThread
 private:
     std::string             moduleName;
 
+    // ports
+    yarp::os::RpcClient         ARErpc;
+
+
+    yarp::os::BufferedPort<yarp::os::Bottle>    leftArmStatePort;
+    yarp::os::BufferedPort<yarp::os::Bottle>    rightArmStatePort;
+
+    yarp::os::Bottle        *leftStateBottle;
+    yarp::os::Bottle        *rightStateBottle;
+
 public:
     bool                    closing;
+    bool                    actionRunning; // this indicates if an action is running or not, so we know to read currents
     
 
     clarionIntThread(const std::string &_moduleName, const double _period);
@@ -65,6 +76,8 @@ public:
     virtual void threadRelease();
     virtual void run();
 
+    // rpc methods
+    bool point(double x_pos, double y_pos, double z_pos);
 
 };
 

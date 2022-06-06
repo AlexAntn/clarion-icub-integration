@@ -26,7 +26,21 @@
 
 bool clarionIntThread::openPorts()
 {
-    return true;
+    bool ok;
+
+
+    // ports to obtain currents
+    // left arm
+    std::string portName = "/" + moduleName + "/left_arm_state:i";
+    ok = leftArmStatePort.open(portName);
+    // right arm
+    portName = "/" + moduleName + "/right_arm_state:i";
+    ok = ok && rightArmStatePort.open(portName);
+    // ARE rpc
+    portName = "/" + moduleName + "/are_cmd:i";
+    ok = ok && ARErpc.open(portName);
+
+    return ok;
 }
 
 void clarionIntThread::threadRelease()
@@ -37,6 +51,10 @@ void clarionIntThread::threadRelease()
 void clarionIntThread::close()
 {
     yInfo() << "closing module";
+    leftArmStatePort.close();
+    rightArmStatePort.close();
+    ARErpc.close();
+
     closing = true;
 
     // ports to close
@@ -48,6 +66,9 @@ void clarionIntThread::close()
 void clarionIntThread::interrupt()
 {
     yInfo() << "interrupting ports";
+    leftArmStatePort.interrupt();
+    rightArmStatePort.interrupt();
+    ARErpc.interrupt();
 
     // ports to interrupt
 }
@@ -55,6 +76,7 @@ void clarionIntThread::interrupt()
 bool clarionIntThread::threadInit()
 {
     closing = false;
+    actionRunning = false;
 
     if (!openPorts())
     {
@@ -64,8 +86,43 @@ bool clarionIntThread::threadInit()
     return true;
 }
 
+bool clarionIntThread::point(double x_pos, double y_pos, double z_pos)
+{
+    // should interact with ARE to point at something
+    actionRunning = true;
+    //yarp::os::Time::delay(2);
+    // instead of the delay, we send command to ARE
+    yarp::os::Bottle cmd, reply;
+    cmd.addString("point");
+    yarp::os::Bottle &coordBottle = cmd.addList();
+    coordBottle.addFloat32(x_pos);
+    coordBottle.addFloat32(y_pos);
+    coordBottle.addFloat32(z_pos);
+    yInfo() << "bottle is: " << cmd.toString();
+    ARErpc.write(cmd, reply);
+
+    actionRunning = false;
+    return true;
+}
+
 void clarionIntThread::run()
 {
+    // in this thread we will collect data during action execution
+    // e.g.: motor currents
+    if(actionRunning)
+    {
+        leftStateBottle = leftArmStatePort.read(false);
+        if(leftStateBottle != NULL)
+        {
+            yInfo() << "we got a left state";
+        }
+        rightStateBottle = rightArmStatePort.read(false);
+        if(rightStateBottle != NULL)
+        {
+            yInfo() << "we got a right state";
+        }
+    }
+
     //yInfo() << "Hello! I'm running!";
     return;
 }

@@ -86,6 +86,8 @@ public:
     bool            updateModule() override;
 
     // rpc calls
+
+    bool            point(double x_pos, double y_pos, double z_pos);
 };
 
 #endif

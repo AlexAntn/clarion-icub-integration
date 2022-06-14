@@ -61,21 +61,21 @@ bool clarionInterface::openPorts()
 {
     bool ok;
 
-    std::string portName;
+    /*std::string portName;
     portName = "/" + moduleName + "/blobs:i";
     ok = blobPort.open(portName);
 
     portName = "/" + moduleName + "/segmented:i";
     ok = ok && segmentedPort.open(portName);
-
+    */
     return ok;
 }
 
 bool clarionInterface::interruptModule()
 {
     handlerPort.interrupt();
-    blobPort.interrupt();
-    segmentedPort.interrupt();
+    /*blobPort.interrupt();
+    segmentedPort.interrupt();*/
     thread->askToStop();
 
     return true;
@@ -84,8 +84,8 @@ bool clarionInterface::interruptModule()
 bool clarionInterface::close()
 {
     yInfo() << "starting shutdown procedure";
-    blobPort.close();
-    segmentedPort.close();
+    /*blobPort.close();
+    segmentedPort.close();*/
 
     thread->interrupt();
     thread->close();
@@ -111,7 +111,7 @@ double clarionInterface::getPeriod()
 bool clarionInterface::updateModule()
 {
     // Get visual data from lbpExtract/segmented
-    segmentedImg = segmentedPort.read(false);
+    /*segmentedImg = segmentedPort.read(false);
     if(segmentedImg != NULL)
     {
         yInfo() << "we got an image";
@@ -122,7 +122,7 @@ bool clarionInterface::updateModule()
     if(blobBottle != NULL)
     {
         yInfo() << "we got something: " << blobBottle->toString();
-    }
+    }*/
 
     // Recognize shapes/colors
 

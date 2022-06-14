@@ -76,7 +76,7 @@ void clarionIntThread::interrupt()
 bool clarionIntThread::threadInit()
 {
     closing = false;
-    actionRunning = false;
+    actionRunning = true;
 
     if (!openPorts())
     {
@@ -109,17 +109,38 @@ void clarionIntThread::run()
 {
     // in this thread we will collect data during action execution
     // e.g.: motor currents
+    /*
+        -- joint positions
+        -- joint velocities
+        -- joint acelerations
+        -- motor positions
+        -- motor velocities
+        -- motor acelerations
+        -- torque
+        -- pwmDutycycle
+        -- currents
+        -- control mode
+        -- interaction mode
+    */
     if(actionRunning)
     {
         leftStateBottle = leftArmStatePort.read(false);
         if(leftStateBottle != NULL)
         {
-            yInfo() << "we got a left state";
+            yInfo() << "current status is: " << leftStateBottle->get(17).asBool();
+            if(leftStateBottle->get(17).asBool())
+            {
+                yInfo() << "we got a left state: " << leftStateBottle->get(16).toString();  
+            }
         }
         rightStateBottle = rightArmStatePort.read(false);
         if(rightStateBottle != NULL)
         {
-            yInfo() << "we got a right state";
+            yInfo() << "current status is: " << rightStateBottle->get(17).asBool();
+            if(rightStateBottle->get(17).asBool())
+            {
+                yInfo() << "we got a right state: " << rightStateBottle->get(16).toString();  
+            }
         }
     }
 

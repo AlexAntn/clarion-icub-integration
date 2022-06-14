@@ -57,12 +57,12 @@ class clarionInterface : public yarp::os::RFModule, public clarionInterface_IDLs
     std::string                 handlerPortName;
     
     // ports
-    yarp::os::BufferedPort<yarp::os::Bottle>                            blobPort;
+    /*yarp::os::BufferedPort<yarp::os::Bottle>                            blobPort;
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> >    segmentedPort;
 
     yarp::os::Bottle                                *blobBottle;
     yarp::sig::ImageOf<yarp::sig::PixelRgb>         *segmentedImg; // segmented image from lbpExtract
-
+*/
     // other variables
     bool                        closing;
     std::string                 moduleName;
